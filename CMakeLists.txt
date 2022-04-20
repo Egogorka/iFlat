@@ -5,8 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(iFlat
         main.cpp
-        utility/Vector.h
-)
+        code/utility/Vector.h
+        code/utility/ODE.h
+        code/solver/tracing.h code/solver/tracing.cpp)
 
-include_directories(utility, ../Arx)
+include_directories(code/utility, ../iFlat)
 
