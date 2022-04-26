@@ -61,13 +61,14 @@ std::vector<OpticalData> solver_basic(
         float h, float alpha, int N, float dt, int M) {
     auto rays = solver_full(n, dn, h, alpha, N, dt, M);
     std::vector<OpticalData> out;
+    out.reserve(rays.size());
     for(auto & ray : rays){
         out.emplace_back(
                 ray.start_angle(),
                 ray.end_angle(),
                 ray.end_x(),
                 ray.get_time(),
-                ray.optical_length()
+                ray.optical_length(n)
                 );
     }
 
