@@ -14,6 +14,8 @@ struct OpticalData {
     float end_x;
     float time;
     float optical_length;
+
+    OpticalData(float startAngle, float endAngle, float endX, float time, float opticalLength);
 };
 
 /**
@@ -26,8 +28,8 @@ struct OpticalData {
  * @return
  */
 std::vector<OpticalData> solver_basic(
-        std::function<float(Vector2f)> n,
-        std::function<Vector2f(Vector2f)> dn,
+        const std::function<float(Vector2f)>& n,
+        const std::function<Vector2f(Vector2f)>& dn,
         float h, float alpha, int N, float dt);
 
 /**
@@ -39,8 +41,8 @@ std::vector<OpticalData> solver_basic(
  * @return
  */
 std::vector<Ray> solver_full(
-        std::function<float(Vector2f)> n,
-        std::function<Vector2f(Vector2f)> dn,
+        const std::function<float(Vector2f)>& n,
+        const std::function<Vector2f(Vector2f)>& dn,
         float h, float alpha, int N, float dt);
 
 #endif //IFLAT_RAYSOLVER_H
