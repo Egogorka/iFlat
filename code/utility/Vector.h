@@ -157,5 +157,6 @@ typedef Vector<float,3> Vector3f;
 typedef Vector<int,2> Vector2i;
 typedef Vector<int,3> Vector3i;
 
+typedef Vector<float,4> Vector4f;
 
 #endif //MODELING_VECTOR_H
