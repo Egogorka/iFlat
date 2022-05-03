@@ -34,28 +34,6 @@ def calc_series(x, coeffs, series_type: str):
                                  if k % 2 == 0 else np.sin((k+1)/2 * x)) for k in range(len(coeffs))])
 
 
-# def vary_series(coeffs, temp, initial_temp, min_c0, max_c0, type):
-#     """
-#     Varies a polynomial given by its coefficients.
-#     :param coeffs: list of coefficients
-#     :param temp: current temperature of annealing
-#     :param min_c0: minimal value of 0-th coefficient
-#     :param max_c0: maximal value of 0-th coefficient
-#     """
-#     nc = []
-#     # sigma = (max_c0 - min_c0) * temp / initial_temp
-#     sigma = (max_c0 - min_c0) / 2
-#     c = 0.03
-#     for i in range(len(coeffs)):
-#         # offset = -c * temp / initial_temp * np.sign(coeffs[i]) * (max_c0 - min_c0)
-#         offset = 0
-#         dc = rand.gauss(offset, sigma)
-#         # dc = max(min_c0, dc)
-#         # dc = min(max_c0, dc)
-#         nc.append((coeffs[i] + dc))
-#
-#     return nc
-
 def vary_series(coeffs, temp, initial_temp, min_c0, max_c0, type, step, all_vary_dist):
     """
     Varies a polynomial given by its coefficients.
@@ -147,39 +125,10 @@ def anneal(energy_func, x, series_type, initial_val=0, initial_temp=5000, q=1-1e
 
     print('Got energy: ', sol_energy)
     return calc_series(x, sol_coeffs, series_type), energies
-
-print(energy(n0_val))
-
-sol, ens = anneal(energy, X, max_c0=2, min_c0=-2, poly_power=30, q=0.99, initial_temp=500, series_type="fourier", max_steps=10000)
-plt.plot(X, n0_val)
-plt.plot(X, sol, '-r')
-plt.show()
-# plt.plot(ens)
-# plt.show()
 #
-# plt.plot(ens)
-# plt.show()
-
-# for i in range(10):
-#     print(rand.gauss(0, 1))
+# print(energy(n0_val))
 #
-# coeffs = [0, 0, 0, 0, 0]
-# vals = []
-# for i in range(80):
-#     coeffs = vary_poly(coeffs, 10, 12, -1, 1)
-#     # plt.plot(X, calc_poly(X, coeffs), label=i)
-#     # vals.append(np.interp(0.5, X, calc_poly(X, coeffs)))
-#     vals.append(coeffs[2])
-#
-# # print(vals)
-# plt.plot(vals)
-# plt.legend()
-# plt.show()
-#
-
-# bounds = np.repeat([[-2], [2]], len(X), axis=1)
-# bounds = np.transpose(bounds)
-# print(np.shape(bounds))
-# res = scipy.optimize.dual_annealing(energy, bounds)
-# plt.plot(res.x)
+# sol, ens = anneal(energy, X, max_c0=2, min_c0=-2, poly_power=30, q=0.99, initial_temp=500, series_type="fourier", max_steps=10000)
+# plt.plot(X, n0_val)
+# plt.plot(X, sol, '-r')
 # plt.show()
