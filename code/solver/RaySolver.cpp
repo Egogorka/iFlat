@@ -42,13 +42,13 @@ std::vector<Ray> solver_full(
     Vector2f r{0.0f, h};
     for(int i = 0; i < N; ++i){
         float theta = alpha/2 * ( -1 + 2.0f * float(i)/float(N) );
-        Vector2f k{cosf(theta), -sinf(theta)};
+        Vector2f k{sinf(theta), -cosf(theta)};
         Vector4f state{r[0], r[1], k[0], k[1]};
 
-        Ray ray{state, heun_wrapper<float,Vector4f>(updater), 1.0f/10000};
+        Ray ray{state, heun_wrapper<float,Vector4f>(updater), dt};
         for(int j = 0; j < M; ++j){
             ray.prolong();
-            if(check_last_collision(ray)) break;
+            if(check_last_collision(ray)) continue;
         }
         out.push_back(ray);
     }
@@ -61,6 +61,7 @@ std::vector<OpticalData> solver_basic(
         float h, float alpha, int N, float dt, int M) {
     auto rays = solver_full(n, dn, h, alpha, N, dt, M);
     std::vector<OpticalData> out;
+    out.reserve(rays.size());
     for(auto & ray : rays){
         out.emplace_back(
                 ray.start_angle(),
