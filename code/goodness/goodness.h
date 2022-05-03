@@ -5,16 +5,16 @@
 #ifndef IFLAT_GOODNESS_H
 #define IFLAT_GOODNESS_H
 
-#include "RaySolver.h"
+#include "code/solver/RaySolver.h"
 #include <cmath>
 #include <vector>
-#include <ofstream>
+
 
 float start_angle(
         std::vector<OpticalData> *optical_data, float h, float r, int i);
 
 float goodness(
-        std::vector<OpticalData> *optical_data, float h, float r, int N);
+        std::vector<OpticalData> *optical_data, float h, float r, float alpha, int N);
 
 
 #endif //IFLAT_GOODNESS_H

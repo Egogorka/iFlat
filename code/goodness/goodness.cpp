@@ -12,15 +12,11 @@ float start_angle(std::vector<OpticalData> *optical_data, float h, float r, int 
     return start_angle_calc;
 }
 
-float goodness(std::vector<OpticalData> *optical_data, float h, float r, int N){
-    float g = 0;
-    ofstream fout;
-    fout.open("goodness.txt");
+float goodness(std::vector<OpticalData> *optical_data, float h, float r, float alpha, int N){
+    float g = 0, theta;
     for (int i = 0; i < N; ++i) {
         theta = alpha / 2 * (-1 + 2.0f * float(i) / float(N));
         g += abs(start_angle(optical_data, h, r, i) - theta) * exp( - i * i / N);
     }
-    fout << g;
-    fout.close;
     return g;
 };
