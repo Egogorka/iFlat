@@ -16,7 +16,6 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
     float g = 0, theta;
     for (int i = 0; i < N; ++i) {
         theta = alpha / 2 * (-1 + 2.0f * float(i) / float(N));
-        if (isnan(optical_data[i].end_x)) return -1;
         g += fabs(start_angle(optical_data, h, r, i) - theta) * exp( - i * i / N);
     }
     return g;
