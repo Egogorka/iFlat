@@ -43,6 +43,6 @@ std::vector<OpticalData> solver_basic(
 std::vector<Ray> solver_full(
         const std::function<float(Vector2f)>& n,
         const std::function<Vector2f(Vector2f)>& dn,
-        float h, float alpha, int N, float dt);
+        float h, float alpha, int N, float dt, int M);
 
 #endif //IFLAT_RAYSOLVER_H
