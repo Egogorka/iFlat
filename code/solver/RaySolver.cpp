@@ -67,7 +67,7 @@ std::vector<OpticalData> solver_basic(
                 ray.end_angle(),
                 ray.end_x(),
                 ray.get_time(),
-                ray.optical_length()
+                ray.optical_length(n)
                 );
     }
 
