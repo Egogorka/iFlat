@@ -8,6 +8,8 @@
 #include "code/solver/RaySolver.h"
 #include "code/goodness/goodness.h"
 
+#include "code/solver/tracing.h"
+
 using std::cin, std::cout;
 
 int poly(){
@@ -43,10 +45,16 @@ int poly(){
 
 //    cout << H << ' ' << alpha << ' ' << dt << ' ' << M << '\n';
 
-//    cout << n(Vector2f{0,1}) << '\n';
-
     auto solve = solver_basic(n, dn, H, alpha, M, dt, INT16_MAX);
 
+//    auto solve_full = solver_full(n, dn, H, alpha, M, dt, INT16_MAX);
+
+//    for(auto& ray : solve_full){
+//        for(auto& value: ray.get_values()){
+//            cout << value[0] << ' ' << value[1] << ' ' << value[2] << ' ' << value[3] << '\n';
+//        }
+//        cout << '\n';
+//    }
 //    for (auto& data : solve) {
 //        std::cout << data.optical_length << '\n';
 //        std::cout << data.end_x << '\n';

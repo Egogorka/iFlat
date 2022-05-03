@@ -16,6 +16,15 @@ Vector4f propagator(const float& t, const Vector4f& vec,
     auto temp = (dot > 0 ? 1.0f : -1.0f)*sqrtf(dot*(dot + 2)) - dot;
     auto temp2 = sqrtf(dn(r)*dn(r));
 
+    if(temp2 == 0.0f){
+        return {
+            v[0]/n(r),
+            v[1]/n(r),
+            0,
+            0
+        };
+    }
+
     return {
         v[0]/n(r),
         v[1]/n(r),
