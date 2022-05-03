@@ -34,7 +34,7 @@ def calc_series(x, coeffs, series_type: str):
                                  if k % 2 == 0 else np.sin((k+1)/2 * x)) for k in range(len(coeffs))])
 
 
-def vary_series(coeffs, temp, initial_temp, min_c0, max_c0, type, step, all_vary_dist):
+def vary_series(coeffs, min_c0, max_c0, step, all_vary_dist):
     """
     Varies a polynomial given by its coefficients.
     :param coeffs: list of coefficients
@@ -67,7 +67,7 @@ def vary_series(coeffs, temp, initial_temp, min_c0, max_c0, type, step, all_vary
         return nc
 
 
-def anneal(energy_func, x, series_type, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1e-6, poly_power=20,
+def anneal(energy_func, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1e-6, poly_power=20,
            min_c0=-1, max_c0=1, max_steps=10000, reheat_temp=1e-10, reheat_degree=1e-5, all_vary_coeff=2.5):
     """
     Finds a global minimum of the function using simulated annealing
@@ -91,7 +91,7 @@ def anneal(energy_func, x, series_type, initial_val=0, initial_temp=5000, q=1-1e
 
 
     all_vary_dist = int(poly_power * all_vary_coeff)
-    coeff_energy_func = lambda cs: energy_func(calc_series(x, cs, series_type))
+    # coeff_energy_func = lambda cs: energy_func(calc_series(x, cs, series_type))
 
     step = 0
     temp = initial_temp
@@ -100,10 +100,10 @@ def anneal(energy_func, x, series_type, initial_val=0, initial_temp=5000, q=1-1e
 
     sol_coeffs = np.zeros(poly_power)
     sol_coeffs[0] = initial_val
-    sol_energy = coeff_energy_func(sol_coeffs)
+    sol_energy = energy_func(sol_coeffs)
     while step < max_steps and sol_energy > max_energy:
-        new_coeffs = vary_series(sol_coeffs, temp, initial_temp, min_c0, max_c0, series_type, step, all_vary_dist)
-        new_energy = coeff_energy_func(new_coeffs)
+        new_coeffs = vary_series(sol_coeffs, min_c0, max_c0, step, all_vary_dist)
+        new_energy = energy_func(new_coeffs)
         if step % 100 == 0:
             print(f'sol_energy: {sol_energy}, new_energy: {new_energy}')
             print(f'Take probability: {np.exp(-(new_energy - sol_energy) / temp)}')
@@ -124,7 +124,7 @@ def anneal(energy_func, x, series_type, initial_val=0, initial_temp=5000, q=1-1e
 
 
     print('Got energy: ', sol_energy)
-    return calc_series(x, sol_coeffs, series_type), energies
+    return sol_coeffs
 #
 # print(energy(n0_val))
 #
