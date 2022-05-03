@@ -101,7 +101,6 @@ def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays
     return float(out)
 
 
-
 if __name__ == "__main__":
     main()
 
