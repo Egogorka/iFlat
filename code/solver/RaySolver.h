@@ -30,7 +30,7 @@ struct OpticalData {
 std::vector<OpticalData> solver_basic(
         const std::function<float(Vector2f)>& n,
         const std::function<Vector2f(Vector2f)>& dn,
-        float h, float alpha, int N, float dt);
+        float h, float alpha, int N, float dt, int M);
 
 /**
  * Provides the full ray information
