@@ -8,7 +8,7 @@
 #include "code/solver/RaySolver.h"
 #include <cmath>
 #include <vector>
-#include <fstream>
+
 
 float start_angle(
         std::vector<OpticalData> *optical_data, float h, float r, int i);
