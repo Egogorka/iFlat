@@ -11,10 +11,10 @@
 
 
 float start_angle(
-        std::vector<OpticalData> *optical_data, float h, float r, int i);
+        const std::vector<OpticalData> &optical_data, float h, float r, int i);
 
 float goodness(
-        std::vector<OpticalData> *optical_data, float h, float r, float alpha, int N);
+        const std::vector<OpticalData> &optical_data, float h, float r, float alpha, int N);
 
 
 #endif //IFLAT_GOODNESS_H
