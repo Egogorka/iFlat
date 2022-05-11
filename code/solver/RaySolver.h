@@ -45,4 +45,18 @@ std::vector<Ray> solver_full(
         const std::function<Vector2f(Vector2f)>& dn,
         float h, float alpha, int N, float dt, int M);
 
+/**
+ * Solves only for 1 ray
+ * @param n
+ * @param dn
+ * @param r0
+ * @param v0
+ * @param M - amount of steps
+ * @return
+ */
+Ray solver_partial(
+        const std::function<float(Vector2f)>& n,
+        const std::function<Vector2f(Vector2f)>& dn,
+        Vector2f r0, Vector2f v0, float dt, int M);
+
 #endif //IFLAT_RAYSOLVER_H

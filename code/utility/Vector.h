@@ -159,4 +159,9 @@ typedef Vector<int,3> Vector3i;
 
 typedef Vector<float,4> Vector4f;
 
+template<typename T>
+T cross(const Vector<T,2>& a, const Vector<T,2>& b){
+    return a.x()*b.y() - a.y()*b.x();
+}
+
 #endif //MODELING_VECTOR_H

@@ -6,45 +6,52 @@
 #include <cmath>
 #include "code/utility/Vector.h"
 
-Vector4f propagator(const float& t, const Vector4f& vec,
-                    const std::function<float(Vector2f)>& n,
-                    const std::function<Vector2f(Vector2f)>& dn){
-    Vector<float, 2> r{vec[0], vec[1]};
-    Vector<float, 2> v{vec[2], vec[3]};
+using scalar = float;
+using Vector4 = Vector<scalar, 4>;
+using Vector2 = Vector<scalar, 2>;
 
-    auto dot = v * dn(r);
-    auto temp = (dot > 0 ? 1.0f : -1.0f)*sqrtf(dot*(dot + 2)) - dot;
-    auto temp2 = sqrtf(dn(r)*dn(r));
+Vector4 propagator(const scalar& t, const Vector4& vec,
+                    const std::function<float(Vector2)>& n,
+                    const std::function<Vector2(Vector2)>& dn){
+    Vector2 r{vec[0], vec[1]};
+    Vector2 v{vec[2], vec[3]};
 
-    if(temp2 == 0.0f){
-        return {
-            v[0]/n(r),
-            v[1]/n(r),
-            0,
-            0
-        };
-    }
+    auto n_at = n(r);
+    auto n_sqr = n_at*n_at;
 
     return {
-        v[0]/n(r),
-        v[1]/n(r),
-        dn(r)[0]/temp2,
-        dn(r)[1]/temp2
+        v[0]/n_sqr,
+        v[1]/n_sqr,
+        dn(r)[0]/n_at,
+        dn(r)[1]/n_at
     };
 }
 
-bool check_last_collision(const Solution<float,Vector4f>& solution){
+bool check_last_collision(const Solution<scalar,Vector4>& solution){
     const auto& values = solution.get_values();
-    return values.back()[1] <= 0;
+    return values.back()[1] <= scalar{};
+}
+
+Ray solver_partial(const std::function<float(Vector2f)> &n, const std::function<Vector2f(Vector2f)> &dn, Vector2f r0,
+                   Vector2f v0, float dt, int M) {
+    auto updater = [&n, &dn](const scalar& t, const Vector4& vec){
+        return propagator(t, vec, n, dn);
+    };
+
+    Ray out{Vector4{r0[0],r0[1],v0[0],v0[1]}, heun_wrapper<float,Vector4f>(updater), dt};
+    for(int j = 0; j < M; ++j){
+        out.prolong();
+    }
+    return out;
 }
 
 std::vector<Ray> solver_full(
-        const std::function<float(Vector2f)>& n,
-        const std::function<Vector2f(Vector2f)>& dn,
-        float h, float alpha, int N, float dt, int M) {
+        const std::function<scalar(Vector2)>& n,
+        const std::function<Vector2(Vector2)>& dn,
+        scalar h, scalar alpha, int N, scalar dt, int M) {
     std::vector<Ray> out{};
 
-    auto updater = [&n, &dn](const float& t, const Vector4f& vec){
+    auto updater = [&n, &dn](const scalar& t, const Vector4& vec){
         return propagator(t, vec, n, dn);
     };
 
