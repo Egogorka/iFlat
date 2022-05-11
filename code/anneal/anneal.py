@@ -66,7 +66,7 @@ def anneal(energy_func, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1
     sol_coeffs = np.zeros(poly_power)
     sol_coeffs[0] = initial_val
     sol_energy = energy_func(sol_coeffs)
-    while step < max_steps and sol_energy > max_energy:
+    while step < max_steps and (sol_energy > max_energy or sol_energy < 0):
         new_coeffs = vary_series(sol_coeffs, sigma, step, all_vary_dist)
         new_energy = energy_func(new_coeffs)
         if step % 100 == 0:
@@ -88,4 +88,4 @@ def anneal(energy_func, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1
             temp += initial_temp * reheat_degree
 
     print('Got energy: ', sol_energy)
-    return sol_coeffs
+    return sol_coeffs, sol_energy

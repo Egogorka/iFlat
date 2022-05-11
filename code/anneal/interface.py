@@ -4,7 +4,7 @@ import subprocess as sp
 import numpy as np
 
 SERIES_TYPES = ["fourier", "poly"]
-EXECUTABLE_PATH = ""
+EXECUTABLE_PATH = "../../build/iFlat"
 
 def main():
     series_type = input("Enter series type(fourier/poly): ")
@@ -78,26 +78,26 @@ def main():
         return
 
     energy_f = lambda n: energy(series_type, n, height, angle, number_of_rays, dt)
-    anneal.anneal(energy_f)
+    coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=50)
+    print(coeffs)
+
 
 
 def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays: float, dt: float):
     def gen_string():
         print(n)
-        return f"""
-        {series_type}
+        return f"""{series_type}
         {len(n)}
         {' '.join(list(map(str, n)))}
         {h}
         {angle}
         {dt}
         {number_of_rays}
-        0
+        0\n
         """
-    print(gen_string())
-    ppn = sp.Popen([EXECUTABLE_PATH], stdout=sp.PIPE)
-    out, err = ppn.communicate(input=bytes(gen_string()), timeout=15)
-    print(out)
+    ppn = sp.Popen([EXECUTABLE_PATH], stdout=sp.PIPE, stdin=sp.PIPE, stderr=sp.PIPE)
+    out, err = ppn.communicate(input=bytes(gen_string(), 'utf-8'), timeout=12)
+    print("Energy ", out)
     return float(out)
 
 
