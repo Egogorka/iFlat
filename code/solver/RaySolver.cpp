@@ -76,20 +76,14 @@ std::vector<OpticalData> solver_basic(
         const std::function<Vector2f(Vector2f)>& dn,
         float h, float alpha, int N, float dt, int M) {
     auto rays = solver_full(n, dn, h, alpha, N, dt, M);
-    std::vector<OpticalData> out;
-    out.reserve(rays.size());
-    for(auto & ray : rays){
-        out.emplace_back(
-                ray.start_angle(),
-                ray.end_angle(),
-                ray.end_x(),
-                ray.get_time(),
-                ray.optical_length(n)
-                );
-    }
-
-    return out;
+    return get_data(rays, n);
 }
 
-OpticalData::OpticalData(float startAngle, float endAngle, float endX, float time, float opticalLength) : start_angle(
-        startAngle), end_angle(endAngle), end_x(endX), time(time), optical_length(opticalLength) {}
+std::vector<OpticalData> get_data(const std::vector<Ray>& rays, const std::function<scalar(Vector2)>& n) {
+    std::vector<OpticalData> out{};
+    out.reserve(rays.size());
+    for(const auto& ray : rays){
+        out.push_back(ray.get_data(n));
+    }
+    return out;
+}

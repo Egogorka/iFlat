@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -43,28 +44,48 @@ int poly(){
     int T;
     cin >> T; // пока пофиг на T
 
-//    cout << H << ' ' << alpha << ' ' << dt << ' ' << M << '\n';
+    switch (T)
+    {
+        case 1:
+        case 2:{
 
-    auto solve = solver_basic(n, dn, H, alpha, M, dt, INT16_MAX);
+            std::string name;
+            cin >> name;
 
-//    auto solve_full = solver_full(n, dn, H, alpha, M, dt, INT16_MAX);
+            auto solve = solver_full(n, dn, H, alpha, M, dt, INT16_MAX);
+            std::string PATH = "../data/points/data/" + name;
+            std::ofstream fout;
 
-//    for(auto& ray : solve_full){
-//        for(auto& value: ray.get_values()){
-//            cout << value[0] << ' ' << value[1] << ' ' << value[2] << ' ' << value[3] << '\n';
-//        }
-//        cout << '\n';
-//    }
-//    for (auto& data : solve) {
-//        std::cout << data.optical_length << '\n';
-//        std::cout << data.end_x << '\n';
-//        std::cout << data.start_angle << '\n';
-//    }
+            for(int j = 0 ; j < solve.size(); ++j){
+                std::string temp = PATH + std::to_string(j) + ".csv";
+                fout.open(temp);
+                if(T == 2) {
+                    fout << solve[j].get_data(n) << '\n';
+                    continue;
+                }
 
-    float good = goodness(solve, H, 1.0f, alpha, M);
+                auto values = solve[j].get_values();
+                for(int i = 0; i < values.size(); ++i){
+                    auto r = Vector2f{values[i][0], values[i][1]};
+                    auto v0 = Vector2f{values[i][2], values[i][3]};
+                    auto t = dt * i;
+                    // First integrals of the system:
+                    // |v| ~ (v,v)/n(r)/n(r) const
+                    // n*[v - (v,dn)/(dn,dn)*dn] ~ const
+                    fout << t << ' ' << values[i] << '\n';
+                }
+                fout << std::endl;
+                fout.close();
+            }
 
-    cout << good;
-
+        }
+        default: {
+            auto solve = solver_basic(n, dn, H, alpha, M, dt, INT16_MAX);
+            float good = goodness(solve, H, 1.0f, alpha, M);
+            cout << good;
+            break;
+        }
+    }
     return 0;
 }
 
@@ -75,5 +96,4 @@ int main(int argc, char** argv) {
     cin >> type;
 
     if( type == "poly" ) poly();
-
 }
