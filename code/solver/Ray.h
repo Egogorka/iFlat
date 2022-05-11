@@ -12,9 +12,23 @@
 #include <functional>
 #include <cmath>
 
-using Vector4f = Vector<float, 4>;
+using scalar = float;
+using Vector4 = Vector<scalar, 4>;
+using Vector2 = Vector<scalar, 2>;
 
-class Ray : public Solution<float, Vector4f> {
+struct OpticalData {
+    scalar start_angle;
+    scalar end_angle;
+    scalar end_x;
+    scalar time;
+    scalar optical_length;
+
+    OpticalData(scalar startAngle, scalar endAngle, scalar endX, scalar time, scalar opticalLength);
+
+    friend std::ostream& operator<<(std::ostream& out, const OpticalData& data);
+};
+
+class Ray : public Solution<scalar, Vector4> {
     using Solution::Solution;
 
     /**
@@ -23,39 +37,18 @@ class Ray : public Solution<float, Vector4f> {
      * @param v - vector, 2 - x dir, 3 - y dir
      * @return
      */
-    static float angle(const Vector4f& v){
-        return atanf(-v[2]/v[3]);
-    }
+    static scalar angle(const Vector4& v);
 
 public:
-    float optical_length(const std::function<float(Vector2f)>& n){
-        float out = 0;
+    [[nodiscard]] scalar optical_length(const std::function<scalar(Vector2)>& n) const;
 
-        auto iter = values.cbegin();
-        auto pre_iter = iter;
-        ++iter;
-        while (iter != values.cend()){
-            auto dv = *iter - *pre_iter;
-            auto dx = sqrtf(dv[0]*dv[0] + dv[1]*dv[1]);
-            Vector2f r{(*pre_iter)[0], (*pre_iter)[1]};
-            out += dx * n(r);
-            ++pre_iter;
-            ++iter;
-        }
-        return out;
-    }
+    [[nodiscard]] scalar start_angle() const;
 
-    float start_angle(){
-        return angle(values.front());
-    }
+    [[nodiscard]] scalar end_angle() const;
 
-    float end_angle(){
-        return angle(values.back());
-    }
+    [[nodiscard]] scalar end_x() const;
 
-    float end_x(){
-        return values.back()[0];
-    }
+    [[nodiscard]] OpticalData get_data(const std::function<scalar(Vector2)>& n) const;
 };
 
 

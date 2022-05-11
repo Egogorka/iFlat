@@ -8,16 +8,6 @@
 #include "Ray.h"
 #include <vector>
 
-struct OpticalData {
-    float start_angle;
-    float end_angle;
-    float end_x;
-    float time;
-    float optical_length;
-
-    OpticalData(float startAngle, float endAngle, float endX, float time, float opticalLength);
-};
-
 /**
  * @param n - function that returns n
  * @param dn - gradient of the n
@@ -44,6 +34,8 @@ std::vector<Ray> solver_full(
         const std::function<float(Vector2f)>& n,
         const std::function<Vector2f(Vector2f)>& dn,
         float h, float alpha, int N, float dt, int M);
+
+std::vector<OpticalData> get_data(const std::vector<Ray>& rays, const std::function<scalar(Vector2)>& n);
 
 /**
  * Solves only for 1 ray
