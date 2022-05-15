@@ -53,7 +53,7 @@ int poly(){
             cin >> name;
 
             auto solve = solver_full(n, dn, H, alpha, M, dt, INT16_MAX);
-            std::string PATH = "../data/points/data/" + name;
+            std::string PATH = "../data/points/data/" + name + '_';
             std::ofstream fout;
 
             for(int j = 0 ; j < solve.size(); ++j){

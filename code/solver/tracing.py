@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+import os, glob
+
 figure_size = (10,10)
 
 def plot_data(t, phi, ksi):
@@ -15,15 +17,16 @@ def plot_integral(t, I, I0):
     plt.title("ln(|I-1|)")
 
 if __name__ == '__main__':
+    name = input()
+
     plt.figure(figsize=figure_size)
 
-    PATH = "../../data/"
+    MAINPATH = "../../data/"
+    PATH = "points/data/"
+    files = glob.glob(MAINPATH+PATH+name+"_*")
 
-    for N in range(21):
-        print(N)
-        t, rx, ry, kx, ky, I = np.loadtxt(PATH+"/points/euler/"+str(N)+".csv", unpack=True)
+    for file in files:
+        t, rx, ry, kx, ky = np.loadtxt(file, unpack=True)
         plot_data(t, rx, ry)
-        I0 = I[0]
-        plot_integral(t, I, I0)
-    plt.savefig(PATH+"images/phase_diagram.png")
-    plt.show()
+    plt.savefig(MAINPATH+"images/"+name+"_diagram.png")
+    # plt.show()
