@@ -27,9 +27,9 @@ Vector4 propagator(const scalar& t, const Vector4& vec,
     };
 }
 
-bool check_last_collision(const Solution<scalar,Vector4>& solution){
+bool check_last_collision(const Ray& solution){
     const auto& values = solution.get_values();
-    return values.back()[1] <= scalar{};
+    return values.back()[1] <= scalar{} || values.back()[3] >= scalar{};
 }
 
 Ray solver_partial(const std::function<float(Vector2f)> &n, const std::function<Vector2f(Vector2f)> &dn, Vector2f r0,
@@ -64,9 +64,10 @@ std::vector<Ray> solver_full(
         Ray ray{state, heun_wrapper<float,Vector4f>(updater), dt};
         for(int j = 0; j < M; ++j){
             ray.prolong();
-            if(check_last_collision(ray)) continue;
+            if(check_last_collision(ray)) goto LOOP;
         }
         out.push_back(ray);
+        LOOP:;
     }
     return out;
 }

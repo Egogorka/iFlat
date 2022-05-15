@@ -44,6 +44,9 @@ int poly(){
     int T;
     cin >> T; // пока пофиг на T
 
+    auto solve = solver_full(n, dn, H, alpha, M, dt, INT32_MAX);
+    auto optical_data = get_data(solve, n);
+
     switch (T)
     {
         case 1:
@@ -52,7 +55,6 @@ int poly(){
             std::string name;
             cin >> name;
 
-            auto solve = solver_full(n, dn, H, alpha, M, dt, INT16_MAX);
             std::string PATH = "../data/points/data/" + name + '_';
             std::ofstream fout;
 
@@ -80,8 +82,7 @@ int poly(){
 
         }
         default: {
-            auto solve = solver_basic(n, dn, H, alpha, M, dt, INT16_MAX);
-            float good = goodness(solve, H, 1.0f, alpha, M);
+            float good = goodness(optical_data, H, 1.0f, alpha, M);
             cout << good;
             break;
         }
