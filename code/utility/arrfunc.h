@@ -36,7 +36,7 @@ std::function<scalar(scalar)> coef_func(std::vector<scalar> coefs){
  * @return P'(x)
  */
 template<typename scalar>
-std::vector<scalar> poly_der(std::vector<scalar> coefs){
+std::vector<scalar> poly_der(const std::vector<scalar>& coefs){
     std::vector<scalar> out;
     if(coefs.size() == 1){
         out.push_back(scalar{});
@@ -44,7 +44,7 @@ std::vector<scalar> poly_der(std::vector<scalar> coefs){
     }
     out.reserve(coefs.size()-1);
     for(int i=1; i<coefs.size(); ++i){
-        out[i-1] = i*coefs[i];
+        out.push_back(i*coefs[i]);
     }
     return out;
 }
