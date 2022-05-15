@@ -77,15 +77,13 @@ def main():
         print('Sweep angle must be positive.')
         return
 
-    energy_f = lambda n: energy(series_type, n, height, angle, number_of_rays, dt)
-    coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=50)
+    energy_f = lambda n, save_tr, step: energy(series_type, n, height, angle, number_of_rays, dt, save_tr, step)
+    coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=50, initial_temp=30)
     print(coeffs)
 
 
-
-def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays: float, dt: float):
+def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays: float, dt: float, save_trajectories: bool, step: int):
     def gen_string():
-        print(n)
         return f"""{series_type}
         {len(n)}
         {' '.join(list(map(str, n)))}
@@ -93,11 +91,15 @@ def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays
         {angle}
         {dt}
         {number_of_rays}
-        0\n
+        {int(save_trajectories)}
+        {step if save_trajectories else ""}
         """
     ppn = sp.Popen([EXECUTABLE_PATH], stdout=sp.PIPE, stdin=sp.PIPE, stderr=sp.PIPE)
     out, err = ppn.communicate(input=bytes(gen_string(), 'utf-8'), timeout=12)
     print("Energy ", out)
+    print('Saving: ', save_trajectories)
+    if(save_trajectories):
+        print(gen_string())
     return float(out)
 
 
