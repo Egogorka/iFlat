@@ -29,7 +29,7 @@ Vector4 propagator(const scalar& t, const Vector4& vec,
 
 bool check_last_collision(const Solution<scalar,Vector4>& solution){
     const auto& values = solution.get_values();
-    return values.back()[1] <= scalar{};
+    return values.back()[1] <= scalar{} && values.back()[3] >= scalar{};
 }
 
 Ray solver_partial(const std::function<float(Vector2f)> &n, const std::function<Vector2f(Vector2f)> &dn, Vector2f r0,
