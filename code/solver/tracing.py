@@ -7,7 +7,6 @@ figure_size = (10,10)
 
 def plot_data(t, phi, ksi):
     plt.subplot(1,2,1)
-    plt.axis([-0.5,0.5,0.5,1.5])
     plt.plot(phi, ksi)
 
 def plot_integral(t, I, I0):
