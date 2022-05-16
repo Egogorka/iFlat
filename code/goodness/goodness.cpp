@@ -14,13 +14,14 @@ float start_angle(const std::vector<OpticalData> &optical_data, float h, float r
 
 float goodness(const std::vector<OpticalData> &optical_data, float h, float r, float alpha, int N){
     float g = 0, theta;
-    float norm;
-    for (int i = 0; i < N; ++i) {
+    float norm = 0;
+    if (!optical_data.size()) return 1e5;
+    for (int i = 0; i < optical_data.size(); ++i) {
         theta = alpha / 2 * (-1 + 2.0f * float(i) / float(N));
         if (std::isnan(optical_data[i].end_x)) return -1;
         g += fabs(start_angle(optical_data, h, r, i) - theta) * exp( - i * i / N);
         norm += exp( - i * i / N);
     }
-    g /= N * norm;
+    g /= optical_data.size() * norm;
     return g;
 };
