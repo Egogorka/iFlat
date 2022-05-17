@@ -69,9 +69,9 @@ def anneal(energy_func, initial_val=[], initial_temp=5000, q=1-1e-3, max_energy=
         sol_coeffs = initial_val
 
     sol_energy = energy_func(sol_coeffs, False, step)
-    while step < max_steps and (sol_energy > max_energy or sol_energy < 0):
+    while step <= max_steps and (sol_energy > max_energy or sol_energy < 0):
         new_coeffs = vary_series(sol_coeffs, sigma, step, all_vary_dist)
-        save_tr = step % saving_interval == 0
+        save_tr = step % saving_interval == 0 or step == max_steps
         new_energy = energy_func(new_coeffs, save_tr, step)
         if step % PRINT_INTERVAL == 0:
             print(f'sol_energy: {sol_energy}, new_energy: {new_energy}')

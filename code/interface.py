@@ -79,7 +79,7 @@ def main():
         return
 
     energy_f = lambda n, save_tr, step: energy(series_type, n, height, angle, number_of_rays, dt, save_tr, step)
-    coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=50, initial_temp=1,
+    coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=200, initial_temp=1,
                                        initial_val=np.array([1]))
     print(coeffs)
 
