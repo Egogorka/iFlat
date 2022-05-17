@@ -8,6 +8,9 @@
 #include "code/solver/RaySolver.h"
 #include <cmath>
 #include <vector>
+#include <ofstream>
+
+
 
 
 float start_angle(
