@@ -103,6 +103,9 @@ def main():
         logging.error('Sweep angle must be positive.')
         return
 
+    info_str = f"series type: {series_type}; series length: {series_length}; height: {height}; sweep angle: {angle}; number of rays: {number_of_rays}; dt: {dt}"
+    logging.info(info_str)
+
     energy_f = lambda n, save_tr, step: energy(series_type, n, height, angle, number_of_rays, dt, save_tr, step)
     coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=200, initial_temp=1,
                                        initial_val=np.array([1]))

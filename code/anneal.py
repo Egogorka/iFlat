@@ -1,7 +1,6 @@
 import numpy as np
-import scipy.optimize
 import random
-import matplotlib.pyplot as plt
+import logging
 
 
 rand = random.Random()
@@ -34,19 +33,7 @@ def vary_series(coeffs, sigma, step, all_vary_dist):
 
 def anneal(energy_func, initial_val=[], initial_temp=5000, q=1-1e-3, max_energy=1e-6, poly_power=20,
            sigma=1, max_steps=10000, reheat_temp=1e-10, reheat_degree=1e-5, all_vary_coeff=2.5, saving_interval=10):
-    """
-    Finds a global minimum of the function using simulated annealing
-    :param energy_func: energy function, which minimum is being found
-    :param x:
-    :param initial_val:
-    :param initial_temp:
-    :param delta_temp:
-    :param max_energy:
-    :param poly_power:
-    :param min_c0:
-    :param max_c0:
-    :return:
-    """
+
     PRINT_INTERVAL = 1
     if poly_power < 0:
         raise ValueError()
@@ -74,22 +61,23 @@ def anneal(energy_func, initial_val=[], initial_temp=5000, q=1-1e-3, max_energy=
         save_tr = step % saving_interval == 0 or step == max_steps
         new_energy = energy_func(new_coeffs, save_tr, step)
         if step % PRINT_INTERVAL == 0:
-            print(f'sol_energy: {sol_energy}, new_energy: {new_energy}')
-            print(f'Take probability: {np.exp(-(new_energy - sol_energy) / temp)}')
-            print('Coeffs:')
-            print(sol_coeffs)
-            print('--------')
+            logging.debug(f'sol_energy: {sol_energy}, new_energy: {new_energy}')
+            logging.debug(f'Take probability: {np.exp(-(new_energy - sol_energy) / temp)}')
+            logging.debug('Coeffs:')
+            logging.debug(sol_coeffs)
+            logging.debug('--------')
+
         if new_energy < sol_energy or rand.uniform(0, 1) < np.exp(-(new_energy - sol_energy) / temp):
             sol_coeffs = new_coeffs
             sol_energy = new_energy
 
         if step % PRINT_INTERVAL == 0:
-            print(f'step: {step}, temp: {temp}, sol_energy: {sol_energy}')
+            logging.debug(f'step: {step}, temp: {temp}, sol_energy: {sol_energy}')
         step += 1
         temp *= q
         energies.append(sol_energy)
         if temp < initial_temp * reheat_temp:
             temp += initial_temp * reheat_degree
 
-    print('Got energy: ', sol_energy)
+    logging.debug('Got energy: ', sol_energy)
     return sol_coeffs, sol_energy
