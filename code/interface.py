@@ -1,5 +1,4 @@
 import anneal
-import numpy as np
 import subprocess as sp
 import numpy as np
 import sys
@@ -106,13 +105,14 @@ def main():
     info_str = f"series type: {series_type}; series length: {series_length}; height: {height}; sweep angle: {angle}; number of rays: {number_of_rays}; dt: {dt}"
     logging.info(info_str)
 
-    energy_f = lambda n, save_tr, step: energy(series_type, n, height, angle, number_of_rays, dt, save_tr, step)
+    file_prefix = datetime.datetime.now().strftime("%d.%m-%H.%M-")
+    energy_f = lambda n, save_tr, step: energy(series_type, n, height, angle, number_of_rays, dt, save_tr, step, file_prefix)
     coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=200, initial_temp=1,
                                        initial_val=np.array([1]))
     print(coeffs)
 
 
-def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays: float, dt: float, save_trajectories: bool, step: int):
+def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays: float, dt: float, save_trajectories: bool, step: int, file_prefix: str):
     def gen_string():
         return f"""{series_type}
         {len(n)}
@@ -122,7 +122,7 @@ def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays
         {dt}
         {number_of_rays}
         {int(save_trajectories)}
-        {step if save_trajectories else ""}
+        {(file_prefix + str(step)) if save_trajectories else ""}
         """
     ppn = sp.Popen([EXECUTABLE_PATH], stdout=sp.PIPE, stdin=sp.PIPE, stderr=sp.PIPE)
     out, err = ppn.communicate(input=bytes(gen_string(), 'utf-8'), timeout=TIMEOUT)
