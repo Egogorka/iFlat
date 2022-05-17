@@ -16,12 +16,12 @@ float start_angle(const std::vector<OpticalData> &optical_data, float h, float r
 
 
 float goodness(const std::vector<OpticalData> &optical_data, float h, float r, float alpha, int N){
-    std::fstream fout;
-    fout.open("outfile.txt", ios::app);
+    std::ofstream fout;
+    fout.open("outfile.txt");
     float g = 0, theta;
     float norm = 0;
     if (optical_data.empty()){
-        fout << 0 << 1e5 << std::endl;
+        fout << 0 << " " << 1e5 << std::endl;
         return 1e5;
     }
     for (int i = 0; i < optical_data.size(); ++i) {
