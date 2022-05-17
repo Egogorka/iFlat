@@ -28,8 +28,16 @@ Vector4 propagator(const scalar& t, const Vector4& vec,
 }
 
 bool check_last_collision(const Ray& solution){
-    const auto& values = solution.get_values();
-    return values.back()[1] <= scalar{} || values.back()[3] >= scalar{};
+    return solution.get_values().back()[1] <= scalar{};
+}
+
+bool check_direction(const Ray& solution){
+    return solution.get_values().back()[3] >= scalar{};
+}
+
+bool check_nan(const Ray& solution) {
+    auto back = solution.get_values().back();
+    return std::isnan(back[0]) || std::isnan(back[1]) || std::isnan(back[2]) || std::isnan(back[3]);
 }
 
 Ray solver_partial(const std::function<float(Vector2f)> &n, const std::function<Vector2f(Vector2f)> &dn, Vector2f r0,
@@ -64,7 +72,9 @@ std::vector<Ray> solver_full(
         Ray ray{state, heun_wrapper<float,Vector4f>(updater), dt};
         for(int j = 0; j < M; ++j){
             ray.prolong();
-            if(check_last_collision(ray)) goto LOOP;
+            std::cout << ray.get_values().back() << std::endl;
+            if(check_direction(ray) || check_nan(ray)) goto LOOP;
+            if(check_last_collision(ray)) break;
         }
         out.push_back(ray);
         LOOP:;

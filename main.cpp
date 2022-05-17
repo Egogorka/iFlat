@@ -55,12 +55,13 @@ int poly(){
             std::string name;
             cin >> name;
 
-            std::string PATH = name + '_';
+            std::string PATH = "../data/points/data/" + name + '_';
             std::ofstream fout;
 
             for(int j = 0 ; j < solve.size(); ++j){
                 std::string temp = PATH + std::to_string(j) + ".csv";
                 fout.open(temp);
+                fout << "";
                 if(T == 2) {
                     fout << solve[j].get_data(n) << '\n';
                     continue;
@@ -95,6 +96,10 @@ int main(int argc, char** argv) {
 
     std::string type;
     cin >> type;
+//
+//    std::ofstream fout;
+//    fout.open("test1.txt");
+//    fout.close();
 
     if( type == "poly" ) poly();
 }
