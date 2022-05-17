@@ -13,7 +13,7 @@ float start_angle(const std::vector<OpticalData> &optical_data, float h, float r
 }
 
 float goodness(const std::vector<OpticalData> &optical_data, float h, float r, float alpha, int N){
-    std::ofstream fout;
+    std::fstream fout;
     fout.open("outfile.txt");
     float g = 0, theta;
     float norm = 0;
@@ -28,7 +28,7 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
         norm += exp( - i * i / N);
     }
     g /= optical_data.size() * norm;
-    fout << optical_data.size() << g << endl;
-    fout.close;
+    fout << optical_data.size() << g << std::endl;
+    fout.close();
     return g;
 };
