@@ -55,7 +55,7 @@ int poly(){
             std::string name;
             cin >> name;
 
-            std::string PATH = "../data/points/data/" + name + '_';
+            std::string PATH = name + '_';
             std::ofstream fout;
 
             for(int j = 0 ; j < solve.size(); ++j){
@@ -91,7 +91,7 @@ int poly(){
 }
 
 int main(int argc, char** argv) {
-//    tracing();
+    tracing();
 
     std::string type;
     cin >> type;

@@ -4,7 +4,8 @@ import subprocess as sp
 import numpy as np
 
 SERIES_TYPES = ["fourier", "poly"]
-EXECUTABLE_PATH = "../../build/iFlat"
+EXECUTABLE_PATH = "../build/iFlat"
+TIMEOUT = 120
 
 def main():
     series_type = input("Enter series type(fourier/poly): ")
@@ -78,7 +79,8 @@ def main():
         return
 
     energy_f = lambda n, save_tr, step: energy(series_type, n, height, angle, number_of_rays, dt, save_tr, step)
-    coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=50, initial_temp=30)
+    coeffs, sol_energy = anneal.anneal(energy_f, poly_power=series_length, max_steps=50, initial_temp=1,
+                                       initial_val=np.array([1]))
     print(coeffs)
 
 
@@ -95,7 +97,7 @@ def energy(series_type: str, n: np.array, h: float, angle: float, number_of_rays
         {step if save_trajectories else ""}
         """
     ppn = sp.Popen([EXECUTABLE_PATH], stdout=sp.PIPE, stdin=sp.PIPE, stderr=sp.PIPE)
-    out, err = ppn.communicate(input=bytes(gen_string(), 'utf-8'), timeout=12)
+    out, err = ppn.communicate(input=bytes(gen_string(), 'utf-8'), timeout=TIMEOUT)
     print("Energy ", out)
     print('Saving: ', save_trajectories)
     if(save_trajectories):

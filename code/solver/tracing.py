@@ -6,8 +6,8 @@ import os, glob
 figure_size = (10,10)
 
 def plot_data(t, phi, ksi):
-    plt.subplot(1,2,1)
     plt.plot(phi, ksi)
+    plt.ylim(bottom=0)
 
 def plot_integral(t, I, I0):
     plt.subplot(1,2,2)

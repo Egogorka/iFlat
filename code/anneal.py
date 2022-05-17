@@ -32,7 +32,7 @@ def vary_series(coeffs, sigma, step, all_vary_dist):
         return nc
 
 
-def anneal(energy_func, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1e-6, poly_power=20,
+def anneal(energy_func, initial_val=[], initial_temp=5000, q=1-1e-3, max_energy=1e-6, poly_power=20,
            sigma=1, max_steps=10000, reheat_temp=1e-10, reheat_degree=1e-5, all_vary_coeff=2.5, saving_interval=10):
     """
     Finds a global minimum of the function using simulated annealing
@@ -47,6 +47,7 @@ def anneal(energy_func, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1
     :param max_c0:
     :return:
     """
+    PRINT_INTERVAL = 1
     if poly_power < 0:
         raise ValueError()
     if initial_temp < 0:
@@ -64,13 +65,15 @@ def anneal(energy_func, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1
     energies = []
 
     sol_coeffs = np.zeros(poly_power)
-    sol_coeffs[0] = initial_val
+    if len(initial_val) == poly_power:
+        sol_coeffs = initial_val
+
     sol_energy = energy_func(sol_coeffs, False, step)
     while step < max_steps and (sol_energy > max_energy or sol_energy < 0):
         new_coeffs = vary_series(sol_coeffs, sigma, step, all_vary_dist)
         save_tr = step % saving_interval == 0
         new_energy = energy_func(new_coeffs, save_tr, step)
-        if step % 100 == 0:
+        if step % PRINT_INTERVAL == 0:
             print(f'sol_energy: {sol_energy}, new_energy: {new_energy}')
             print(f'Take probability: {np.exp(-(new_energy - sol_energy) / temp)}')
             print('Coeffs:')
@@ -80,7 +83,7 @@ def anneal(energy_func, initial_val=0, initial_temp=5000, q=1-1e-3, max_energy=1
             sol_coeffs = new_coeffs
             sol_energy = new_energy
 
-        if step % 100 == 0:
+        if step % PRINT_INTERVAL == 0:
             print(f'step: {step}, temp: {temp}, sol_energy: {sol_energy}')
         step += 1
         temp *= q
