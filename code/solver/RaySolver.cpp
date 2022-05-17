@@ -72,7 +72,6 @@ std::vector<Ray> solver_full(
         Ray ray{state, heun_wrapper<float,Vector4f>(updater), dt};
         for(int j = 0; j < M; ++j){
             ray.prolong();
-            std::cout << ray.get_values().back() << std::endl;
             if(check_direction(ray) || check_nan(ray)) goto LOOP;
             if(check_last_collision(ray)) break;
         }
