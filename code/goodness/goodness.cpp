@@ -12,8 +12,9 @@ float start_angle(const std::vector<OpticalData> &optical_data, float h, float r
     return start_angle_calc;
 }
 
-
-
+float weight(int i, int N){
+    return - 3.0f * pow(fabs((i - N / 2.0f) / N), 3) + 3.0f * pow((i - N / 2.0f) / N, 2);
+}
 
 float goodness(const std::vector<OpticalData> &optical_data, float h, float r, float alpha, int N){
     std::ofstream fout;
@@ -27,8 +28,8 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
     for (int i = 0; i < optical_data.size(); ++i) {
         theta = alpha / 2 * (-1 + 2.0f * float(i) / float(N));
         if (std::isnan(optical_data[i].end_x)) return -1;
-        g += fabs(start_angle(optical_data, h, r, i) - theta) * exp( - i * i / N);
-        norm += exp( - i * i / N);
+        g += fabs(start_angle(optical_data, h, r, i) - theta) * weight(i, N);
+        norm += weight(i, N);
     }
     g /= optical_data.size() * norm;
     fout << optical_data.size() << " " << g << std::endl;
