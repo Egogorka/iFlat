@@ -17,6 +17,7 @@ float dist_sphere(float theta, float h, float r) {
 }
 
 float weight(int i, int N){
+    return 1;
     return - 3.0f * pow(fabs((i - N / 2.0f) / N), 3) + 3.0f * pow((i - N / 2.0f) / N, 2);
 }
 
