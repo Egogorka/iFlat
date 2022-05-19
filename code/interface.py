@@ -62,20 +62,21 @@ def main():
         logging.error('Height must be positive.')
         return
 
-    try:
-        inp = input("Enter sweep angle(from 0 to pi / 2): ")
-        angle = float(inp)
-    except ValueError:
-        logging.error('Conversion error: \"' + inp + "\" is not a float.")
-        return
-    except:
-        logging.error("Unknown error")
-        return
-    if angle < 0:
-        logging.error('Sweep angle must be positive.')
-        return
-    elif angle > np.pi / 2:
-        logging.error("Sweep angle must be less than pi / 2.")
+    # try:
+    #     inp = input("Enter sweep angle(from 0 to pi / 2): ")
+    #     angle = float(inp)
+    # except ValueError:
+    #     logging.error('Conversion error: \"' + inp + "\" is not a float.")
+    #     return
+    # except:
+    #     logging.error("Unknown error")
+    #     return
+    # if angle < 0:
+    #     logging.error('Sweep angle must be positive.')
+    #     return
+    # elif angle > np.pi / 2:
+    #     logging.error("Sweep angle must be less than pi / 2.")
+    angle = 2 * np.arcsin(1 / (1 + height))
 
     try:
         inp = input("Enter number of rays: ")
