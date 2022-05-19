@@ -38,7 +38,7 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
             g += fabs(start_angle(optical_data, h, r, i) - theta) * weight(i, N);
         else {
             if (std::isnan(dist_sphere(theta, h, r)))
-                return 1000*goodness(optical_data, h, r, alpha, N, true);
+                return 1000 * goodness(optical_data, h, r, alpha, N, true);
             g += fabs(dist_sphere(theta, h, r) - optical_data[i].end_x) * weight(i, N);
         }
         norm += weight(i, N);
