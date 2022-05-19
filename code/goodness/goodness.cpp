@@ -13,7 +13,8 @@ float start_angle(const std::vector<OpticalData> &optical_data, float h, float r
 }
 
 float dist_sphere(float theta, float h, float r) {
-    return r * (- theta + asinf(((h + r) / r) * sinf(theta)));
+    auto temp = ((h + r) / r) * sinf(theta);
+    return r * (- theta + asinf(temp));
 }
 
 float weight(int i, int N){
@@ -36,7 +37,8 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
         if (f)
             g += fabs(start_angle(optical_data, h, r, i) - theta) * weight(i, N);
         else {
-            if (std::isnan(dist_sphere(theta, h, r))) return 1e5;
+            if (std::isnan(dist_sphere(theta, h, r)))
+                return 1000*goodness(optical_data, h, r, alpha, N, true);
             g += fabs(dist_sphere(theta, h, r) - optical_data[i].end_x) * weight(i, N);
         }
         norm += weight(i, N);
