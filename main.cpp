@@ -91,15 +91,22 @@ int poly(){
     return 0;
 }
 
+void testing(){
+
+}
+
 int main(int argc, char** argv) {
-    tracing();
+//    tracing();
 
     std::string type;
     cin >> type;
-//
 //    std::ofstream fout;
 //    fout.open("test1.txt");
 //    fout.close();
 
     if( type == "poly" ) poly();
+    else
+    if( type == "testing") testing();
+    else
+        cout << "No appropriate type given";
 }
