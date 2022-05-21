@@ -7,7 +7,7 @@ import pathlib
 import logging
 
 SERIES_TYPES = ["fourier", "poly"]
-EXECUTABLE_PATH = "../build/iFlat"
+EXECUTABLE_PATH = "../cmake-build-debug/iFlat"
 TIMEOUT = 120
 LOG_PATH = "../log/"
 
@@ -32,64 +32,65 @@ def setup_logging():
 def main():
     setup_logging()
 
-    series_type = input("Enter series type(fourier/poly): ")
-    if not series_type in SERIES_TYPES:
-        logging.error("Unknown series type: " + series_type)
-        return
-    try:
-        inp = input("Enter number of elements in series: ")
-        series_length = int(inp)
-    except ValueError:
-        logging.error('Conversion error: \"' + inp + "\" is not an integer.")
-        return
-    except:
-        logging.error("Unknown error")
-        return
-    if series_length <= 0:
-        logging.error("Number of elements must be positive.")
-        return
-
-    try:
-        inp = input("Enter viewpoint height(R=1): ")
-        height = float(inp)
-    except ValueError:
-        logging.error('Conversion error: \"' + inp + "\" is not a float.")
-        return
-    except:
-        logging.error("Unknown error")
-        return
-    if height < 0:
-        logging.error('Height must be positive.')
-        return
-
+    # series_type = input("Enter series type(fourier/poly): ")
+    # if not series_type in SERIES_TYPES:
+    #     logging.error("Unknown series type: " + series_type)
+    #     return
     # try:
-    #     inp = input("Enter sweep angle(from 0 to pi / 2): ")
-    #     angle = float(inp)
+    #     inp = input("Enter number of elements in series: ")
+    #     series_length = int(inp)
+    # except ValueError:
+    #     logging.error('Conversion error: \"' + inp + "\" is not an integer.")
+    #     return
+    # except:
+    #     logging.error("Unknown error")
+    #     return
+    # if series_length <= 0:
+    #     logging.error("Number of elements must be positive.")
+    #     return
+    series_type = 'poly'
+    series_length = 6
+    # try:
+    #     inp = input("Enter viewpoint height(R=1): ")
+    #     height = float(inp)
     # except ValueError:
     #     logging.error('Conversion error: \"' + inp + "\" is not a float.")
     #     return
     # except:
     #     logging.error("Unknown error")
     #     return
-    # if angle < 0:
-    #     logging.error('Sweep angle must be positive.')
+    # if height < 0:
+    #     logging.error('Height must be positive.')
     #     return
-    # elif angle > np.pi / 2:
-    #     logging.error("Sweep angle must be less than pi / 2.")
-    angle = 2 * np.arcsin(1 / (1 + height))
-
+    height = 0.1
     try:
-        inp = input("Enter number of rays: ")
-        number_of_rays = int(inp)
+        inp = input("Enter sweep angle(from 0 to pi): ")
+        angle = float(inp)
     except ValueError:
-        logging.error('Conversion error: \"' + inp + "\" is not an integer.")
+        logging.error('Conversion error: \"' + inp + "\" is not a float.")
         return
     except:
         logging.error("Unknown error")
         return
-    if number_of_rays <= 0:
-        logging.error("Number of rays must be positive.")
+    if angle < 0:
+        logging.error('Sweep angle must be positive.')
+        return
+    elif angle > np.pi:
+        logging.error("Sweep angle must be less than pi.")
+    # angle = 2 * np.arcsin(1 / (1 + height))
 
+    # try:
+    #     inp = input("Enter number of rays: ")
+    #     number_of_rays = int(inp)
+    # except ValueError:
+    #     logging.error('Conversion error: \"' + inp + "\" is not an integer.")
+    #     return
+    # except:
+    #     logging.error("Unknown error")
+    #     return
+    # if number_of_rays <= 0:
+    #     logging.error("Number of rays must be positive.")
+    number_of_rays = 20
     try:
         inp = input("Enter dt: ")
         dt = float(inp)
@@ -110,12 +111,12 @@ def main():
     energy_f = lambda n, save_tr, step: energy(series_type, n, height, angle, number_of_rays, dt, save_tr, step, file_prefix)
     coeffs, sol_energy = anneal.anneal(energy_f,
                                        poly_power=series_length,
-                                       max_steps=5000,
-                                       initial_temp=1.5,
-                                       q=1-1e-2,
-                                       sigma=0.3,
+                                       max_steps=50000,
+                                       initial_temp=1,
+                                       q=1-1*1e-2,
+                                       sigma=0.9,
                                        reheat_temp=1e-4,
-                                       reheat_degree=1e-1
+                                       reheat_degree=0.1
                                        )
     print(coeffs)
 

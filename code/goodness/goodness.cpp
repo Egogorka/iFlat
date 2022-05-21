@@ -25,26 +25,64 @@ float weight(int i, int N){
 float goodness(const std::vector<OpticalData> &optical_data, float h, float r, float alpha, int N, bool f){
     std::ofstream fout;
     fout.open("outfile.txt", std::ios::app);
-    float g = 0, theta;
-    float norm = 0;
+
     if (optical_data.empty()){
-        fout << 0 << " " << 1e5 << std::endl;
-        return 1e5;
+        fout << 0 << " " << 1e9 << std::endl;
+        return 1e9;
     }
-    for (int i = 0; i < optical_data.size(); ++i) {
-        if (std::isnan(optical_data[i].end_x)) return -1;
-        theta = alpha / 2 * (-1 + 2.0f * float(i) / float(N));
-        if (f)
-            g += fabs(start_angle(optical_data, h, r, i) - theta) * weight(i, N);
-        else {
-            if (std::isnan(dist_sphere(theta, h, r)))
-                return 1000 * goodness(optical_data, h, r, alpha, N, true);
-            g += fabs(dist_sphere(theta, h, r) - optical_data[i].end_x) * weight(i, N);
+    //
+    //N = 20;
+    //alpha = 1.5;
+
+    //alpha = 3; //ATTENTION, EMERGENCY SITUATION
+
+    float theta;
+    int correct_size = 0;
+    for (int i = 0; i < N; i++) {
+        theta = optical_data[i].start_angle;
+        if (!std::isnan(dist_sphere(theta, h, r))){
+            correct_size++;
         }
-        norm += weight(i, N);
     }
-    g /= optical_data.size() * norm;
-    fout << optical_data.size() << " " << g << std::endl;
+    //
+    float g = 0;
+    if (correct_size != optical_data.size()){
+        g += 1e4 * abs(correct_size - optical_data.size());
+    }
+    //
+
+
+    //float norm = 0.1;
+    for (int i = 0; i < optical_data.size(); ++i) {
+        //if (std::isnan(optical_data[i].end_x)) return -1;
+        theta = optical_data[i].start_angle;
+        if (false){}
+            //g += fabs(start_angle(optical_data, h, r, i) - theta) * weight(i, N);
+        else {
+            //if (std::isnan(dist_sphere(theta, h, r))){
+            //    if (std::isnan(optical_data[i].end_x)){
+            //    g += 0;
+            //}
+            //    else{
+            //        g += 100;
+            //    }
+            //}
+            if (std::isnan(dist_sphere(theta, h, r))){}
+            else {
+                g += pow(dist_sphere(theta, h, r) - optical_data[i].end_x, 4); //* weight(i, N);
+            }
+        }
+        //norm += 1; //weight(i, N);
+    }
+    //g /= optical_data.size() * norm;
+    g *= 1e3;
+
+    fout << optical_data.size() << "/" << correct_size << "/" << g << " ";
+
+    for (int i = 0; i < optical_data.size(); ++i) {
+        fout << optical_data[i].end_x << " ";
+    }
+    fout << std::endl;
     fout.close();
     return g;
 };
