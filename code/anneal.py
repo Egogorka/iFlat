@@ -30,12 +30,13 @@ def vary_series(coeffs, sigma, step, all_vary_dist):
 
         return nc
 
+#[0.41280058620448995, 0.6344084898095641, 6.717602990285901, -16.166943358398118, 8.854729850922496, 0.6368816233200405, 0, 0]
 #[-2.692048728846623, -1.8632715352370754, 4.42001772511164, 9.352388772133152, -0.6427436802311683, 0]
 #[0, 0, 0, 0, 0, 0]
-def anneal(energy_func, initial_val=[0, 0, 0, 0, 0, 0], initial_temp=5000, q=1-1e-3, max_energy=1e-6, poly_power=20,
-           sigma=1, max_steps=10000, reheat_temp=1e-10, reheat_degree=1e-5, all_vary_coeff=2.5, saving_interval=10):
+def anneal(energy_func, initial_val=[1, 0, 0, 0, 0, 0, 0, 0], initial_temp=5000, q=1-1e-3, max_energy=1e-6, poly_power=20,
+           sigma=1, max_steps=10000, reheat_temp=1e-10, reheat_degree=1e-5, all_vary_coeff=2.5, saving_interval=10000):
 
-    PRINT_INTERVAL = 1
+    PRINT_INTERVAL = 100
     if poly_power < 0:
         raise ValueError()
     if initial_temp < 0:
@@ -67,6 +68,17 @@ def anneal(energy_func, initial_val=[0, 0, 0, 0, 0, 0], initial_temp=5000, q=1-1
             logging.debug('Coeffs:')
             logging.debug(sol_coeffs)
             logging.debug('--------')
+        
+        
+        ####
+        file1 = open("c.txt","a")
+        my_s = str(step)
+        for my_c in sol_coeffs:
+            my_s += " "+str(my_c)
+        file1.write(my_s)
+        file1.write("\n")
+        file1.close()
+        ####
 
         test_param = False
         if new_energy < sol_energy:
@@ -83,11 +95,13 @@ def anneal(energy_func, initial_val=[0, 0, 0, 0, 0, 0], initial_temp=5000, q=1-1
         #####
         if (test_param):
             temp *= q
+        else:
+            temp *= q**0.05
         #####
 
         energies.append(sol_energy)
         if temp < initial_temp * reheat_temp:
             temp += initial_temp * reheat_degree
-
+    
     logging.debug('Got energy: ', sol_energy)
     return sol_coeffs, sol_energy

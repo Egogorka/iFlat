@@ -2,3 +2,8 @@
 /cmake-build-debug/
 /build/
 /.idea
+cmake-build-debug
+__pycache__
+/log
+*.swp
+*.swo

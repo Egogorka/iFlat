@@ -27,8 +27,8 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
     fout.open("outfile.txt", std::ios::app);
 
     if (optical_data.empty()){
-        fout << 0 << " " << 1e9 << std::endl;
-        return 1e9;
+        fout << 0 << " " << 1e10 << std::endl;
+        return 1e10;
     }
     //
     //N = 20;
@@ -39,7 +39,7 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
     float theta;
     int correct_size = 0;
     for (int i = 0; i < N; i++) {
-        theta = optical_data[i].start_angle;
+        theta = alpha/2 * ( -1 + 2.0f * float(i)/float(N) );
         if (!std::isnan(dist_sphere(theta, h, r))){
             correct_size++;
         }
@@ -79,9 +79,10 @@ float goodness(const std::vector<OpticalData> &optical_data, float h, float r, f
 
     fout << optical_data.size() << "/" << correct_size << "/" << g << " ";
 
-    for (int i = 0; i < optical_data.size(); ++i) {
-        fout << optical_data[i].end_x << " ";
-    }
+    //for (int i = 0; i < optical_data.size(); ++i) {
+    //    fout << optical_data[i].end_x << " ";
+    //}
+
     fout << std::endl;
     fout.close();
     return g;
